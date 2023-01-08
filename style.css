@@ -1,0 +1,37 @@
+body{
+    margin:0px;
+    padding:0px;
+    min-height:100vh;
+    background:linear-gradient(to bottom, rgb(43,50,178) 0%, rgb(20,136,204) 100%);
+    color:azure;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+input{
+    font-size:19px;
+    outline:none;
+    color:azure;
+    border:1px solid white;
+    border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: hidden;
+  border-bottom-style:groove;
+}
+#place-display{
+    padding-top:20px;
+}
+#right{
+    border-right:1px solid azure;
+}
+img{
+    height:90px;
+    width:90px;
+}
+#today-temp{
+    font-size:50px;
+}
+#fiveday-content{
+    padding-top:35px;
+}
+col{
+    border:1px solid azure;
+}
