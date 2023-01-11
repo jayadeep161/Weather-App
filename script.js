@@ -1,4 +1,4 @@
-var input=document.getElementById('text');
+var input=document.querySelector('.input');
 var button=document.getElementById('search')
 var  place=document.getElementById('place');
 var today=document.getElementById('description-of-day');
@@ -10,25 +10,55 @@ var today_wind_speed=document.getElementById('today-wind-speed');
 var today_low_temp=document.getElementById('today-low-temp');
 var today_humidity=document.getElementById('today-humidity');
 var five_day_content=document.getElementById('fiveday-content');
-
 const month=["January","February","March","April","May","June","July","August","September","October","November","December"];
 
 const week=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
 
-window.addEventListener('load',()=>{
-    document.getElementById('content').classList.add('d-none');
-    
-})
+window.addEventListener('load',load);
 
-button.addEventListener('click',(e)=>{
+function load(){
+    document.getElementById('content').classList.add('d-none');
+    document.getElementById('fiveday-content').classList.add('d-none');
+     ExtractLocation();
+}
+
+button.addEventListener('click',()=>{
+    show(input.value);
+});
+
+
+function ExtractLocation(){
+    const successCallback = (position) => {
+        const latitude=position.coords.latitude;
+        const longitude=position.coords.longitude;
+        var position_URL=`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=c966f126d7e6460fbd1c56d498363470`;
+        fetch(position_URL).then((res)=>{
+            return res.json();
+        }).then((data)=>{
+            var t;
+            t=(data.features[0].properties.county);
+            show(t);
+        })
+
+      };
+      
+      const errorCallback = (error) => {
+        console.log(error);
+      };
+      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+}
+
+function show(placename){
+   
     const Api_key='dcd9f8c4d4bf39a68809b5fe3a251fce';
-    var URL=`https://api.openweathermap.org/data/2.5/forecast?q=${input.value}&appid=${Api_key}`;
+    var URL=`https://api.openweathermap.org/data/2.5/forecast?q=${placename}&appid=${Api_key}`;
     fetch(URL).then((res)=>{
         return res.json();
     }).then((data)=>{
 
         document.getElementById('content').classList.remove('d-none');
+        document.getElementById('fiveday-content').classList.remove('d-none');
         // display city name
        place.innerHTML=data.city.name;
 
@@ -112,10 +142,28 @@ button.addEventListener('click',(e)=>{
     }).catch((error)=>{
         console.log(error);
         document.getElementById('content').classList.add('d-none');
+        document.getElementById('fiveday-content').classList.add('d-none');
         alert('Data Not Found');
     })
    
-})
+}
+
+function save(place){
+    const place_data={
+        name:place
+    }
+    places_list.push(place);
+    if(localStorage.getItem('place_data')===null){
+        const place_list=[]
+        place_list.push(place_data);
+        localStorage.setItem('place_list',JSON.stringify(place_list));
+    }
+    else{
+        const place_list=JSON.parse(localStorage.getItem('place_list'));
+        place_list.push(place_data);
+        localStorage.setItem('place_list',JSON.stringify(place_list));
+    }
+}
 
 
 function convert(kelvin){
